@@ -2,6 +2,7 @@ const { ShardingManager } = require('discord.js');
 const fs = require('fs');
 const config = require('./config.js');
 const Logger = require('./structures/Logger.js');
+const http = require('http');  // Import du module HTTP
 
 const logger = new Logger();
 
@@ -37,4 +38,12 @@ manager.on('shardCreate', shard => {
     shard.on('ready', () => {
         logger.start(`[CLIENT] Shard ${shard.id} connected to Discord's Gateway.`);
     });
+});
+
+// Création d'un serveur HTTP pour indiquer que le bot est en ligne
+http.createServer(function (req, res) {
+    res.write("I'm alive"); // Réponse envoyée lorsqu'une requête HTTP est reçue
+    res.end();
+}).listen(8080, () => {
+    logger.start("[SERVER] HTTP server is running on port 8080");
 });
