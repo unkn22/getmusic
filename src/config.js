@@ -10,14 +10,14 @@ module.exports = {
         green: 0x00ff00,
         blue: 0x0000ff,
         yellow: 0xffff00,
-        main: 0x2f3136,
+        main: 0x57F287,
     },
     keepAlive: parseBoolean(process.env.KEEP_ALIVE) || false, // for https://replit.com keep alive bot 24/7
     searchEngine: process.env.SEARCH_ENGINE || "ytsearch", // ytsearch = youtube, scsearch = soundcloud, spsearch = spotify,
     maxPlaylistSize: parseInt(process.env.MAX_PLAYLIST_SIZE) || 100,
     botStatus: process.env.BOT_STATUS || 'online', // online, idle, dnd, invisible
-    botActivity: process.env.BOT_ACTIVITY || 'WaveMusic', // set the bot activity
-    botActivityType: parseInt(process.env.BOT_ACTIVITY_TYPE || '2'), // 0 to 5 get more info - https://discord.com/developers/docs/topics/gateway-events#activity-object-activity-types
+    botActivity: process.env.BOT_ACTIVITY || 'Music', // set the bot activity
+    botActivityType: parseInt(process.env.BOT_ACTIVITY_TYPE || '1'), // 0 to 5 get more info - https://discord.com/developers/docs/topics/gateway-events#activity-object-activity-types
     maxQueueSize: parseInt(process.env.MAX_QUEUE_SIZE) || 100,
     owners: JSON.parse(process.env.OWNER_IDS || '[]'),
     clientId: process.env.CLIENT_ID,
@@ -54,13 +54,3 @@ function parseBoolean(value) {
             return false;
     }
 }
-/**
- * Project: WaveMusic
- * Author: Blacky
- * Company: Coders
- * Copyright (c) 2023. All rights reserved.
- * This code is the property of Coder and may not be reproduced or
- * modified without permission. For more information, contact us at
- * https://discord.gg/ns8CTk9J3e
- */
-//# sourceMappingURL=config.js.map
