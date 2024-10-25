@@ -1,5 +1,4 @@
 const Command = require("../../structures/Command.js");
-const { MessageActionRow, MessageSelectMenu } = require("discord.js");
 
 module.exports = class Help extends Command {
   constructor(client) {
@@ -36,75 +35,40 @@ module.exports = class Help extends Command {
       ],
     });
   }
-
   async run(client, ctx, args) {
     const embed = client.embed();
     const prefix = await client.db.getPrefix(ctx.guild.id);
-
+    
     const commands = this.client.commands.filter(
       (cmd) => cmd.category !== "dev"
     );
     const categories = commands
       .map((cmd) => cmd.category)
       .filter((value, index, self) => self.indexOf(value) === index);
-
-    // If no specific command is provided
     if (!args[0]) {
-      // Create a dropdown (select menu) for categories
-      const categoryOptions = categories.map((category) => ({
-        label: category.charAt(0).toUpperCase() + category.slice(1),
-        value: category,
-      }));
-
-      const row = new MessageActionRow().addComponents(
-        new MessageSelectMenu()
-          .setCustomId("help-menu")
-          .setPlaceholder("Choisissez une catégorie")
-          .addOptions(categoryOptions)
-      );
-
+      const fildes = [];
+      categories.forEach((category) => {
+        fildes.push({
+          name: category,
+          value: commands
+            .filter((cmd) => cmd.category === category)
+            .map((cmd) => `\`${cmd.name}\``)
+            .join(", "),
+          inline: false,
+        });
+      });
       const helpEmbed = embed
         .setColor(this.client.color.main)
-        .setTitle("Menu d'Aide")
+        .setTitle("Help Menu")
         .setDescription(
-          `Salut ! Je suis ${this.client.user.username}, un bot de musique. Utilisez \`${prefix.prefix}help <commande>\` pour obtenir plus d'infos sur une commande.`
+          `Hey there! I'm ${this.client.user.username}, a music bot made with [WaveMusic](https://github.com/appujet/WaveMusic) and Discord. You can use \`${prefix.prefix}help <command>\` to get more info on a command.`
         )
         .setFooter({
-          text: `Utilisez ${prefix.prefix}help <commande> pour plus d'infos.`,
+          text: `Use ${prefix.prefix}help <command> for more info on a command`,
         });
-
-      await ctx.sendMessage({ embeds: [helpEmbed], components: [row] });
-
-      // Listen to the interaction for dropdown selection
-      const filter = (interaction) =>
-        interaction.customId === "help-menu" && interaction.user.id === ctx.author.id;
-
-      const collector = ctx.channel.createMessageComponentCollector({
-        filter,
-        time: 60000, // 60 seconds
-      });
-
-      collector.on("collect", async (interaction) => {
-        const selectedCategory = interaction.values[0];
-        const selectedCommands = commands
-          .filter((cmd) => cmd.category === selectedCategory)
-          .map((cmd) => `\`${cmd.name}\``)
-          .join("\n");
-
-        const categoryEmbed = embed
-          .setColor(this.client.color.main)
-          .setTitle(`Catégorie: ${selectedCategory}`)
-          .setDescription(selectedCommands);
-
-        await interaction.update({ embeds: [categoryEmbed], components: [row] });
-      });
-
-      collector.on("end", async () => {
-        // Optionally edit the message to disable dropdown after time ends
-      });
-
+      fildes.forEach((field) => helpEmbed.addFields(field));
+      ctx.sendMessage({ embeds: [helpEmbed] });
     } else {
-      // Show specific command details if provided
       const command = this.client.commands.get(args[0].toLowerCase());
       if (!command)
         return await ctx.sendMessage({
@@ -112,29 +76,36 @@ module.exports = class Help extends Command {
             client
               .embed()
               .setColor(client.color.red)
-              .setDescription(`Commande \`${args[0]}\` non trouvée.`),
+              .setDescription(`Command \`${args[0]}\` not found`),
           ],
         });
-
+      const embed = this.client.embed();
       const helpEmbed = embed
         .setColor(this.client.color.main)
-        .setTitle(`Aide - ${command.name}`)
+        .setTitle(`Help Menu - ${command.name}`)
         .setDescription(`**Description:** ${command.description.content}
 **Usage:** ${prefix.prefix}${command.description.usage}
-**Exemples:** ${command.description.examples
+**Examples:** ${command.description.examples
         .map((example) => `${prefix.prefix}${example}`)
         .join(", ")}
-**Alias:** ${command.aliases.map((alias) => `\`${alias}\``).join(", ")}
-**Catégorie:** ${command.category}
-**Cooldown:** ${command.cooldown} secondes
-**Permissions utilisateur:** ${command.permissions.user.length > 0
+**Aliases:** ${command.aliases.map((alias) => `\`${alias}\``).join(", ")}
+**Category:** ${command.category}
+**Cooldown:** ${command.cooldown} seconds
+**Permissions:** ${
+        command.permissions.user.length > 0
           ? command.permissions.user.map((perm) => `\`${perm}\``).join(", ")
-          : "Aucune"}
-**Permissions bot:** ${command.permissions.client
-          .map((perm) => `\`${perm}\``)
-          .join(", ")}
-**Slash Commande:** ${command.slashCommand ? "Oui" : "Non"}`);
-
+          : "None"
+      }
+**Bot Permissions:** ${command.permissions.client
+        .map((perm) => `\`${perm}\``)
+        .join(", ")}
+**Developer Only:** ${command.permissions.dev ? "Yes" : "No"}
+**Slash Command:** ${command.slashCommand ? "Yes" : "No"}
+**Args:** ${command.args ? "Yes" : "No"}
+**Player:** ${command.player.active ? "Yes" : "No"}
+**DJ:** ${command.player.dj ? "Yes" : "No"}
+**DJ Permissions:** ${command.player.djPerm ? command.player.djPerm : "None"}
+**Voice:** ${command.player.voice ? "Yes" : "No"}`);
       ctx.sendMessage({ embeds: [helpEmbed] });
     }
   }
