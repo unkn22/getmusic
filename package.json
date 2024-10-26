@@ -1,5 +1,5 @@
 {
-    "name": "wavemusic",
+    "name": "Music",
     "version": "3.0.0",
     "description": "WaveMusic is a discord music bot base in (Shoukaku)",
     "main": "src/index.js",
