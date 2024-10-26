@@ -1,9 +1,9 @@
 {
     "name": "Music",
     "version": "3.0.0",
-    "description": "WaveMusic is a discord music bot base in (Shoukaku)",
+    "description": "Music for every taste",
     "main": "src/index.js",
-    "author": "Blacky",
+    "author": "",
     "license": "ISC",
     "scripts": {
         "start": "node src/index.js",
@@ -18,16 +18,16 @@
         "music",
         "bot",
         "lavalink",
-        "shoukaku",
-        "WaveMusic",
-        "wavemusic",
+        "youtube",
+        "soundcloud",
+        "spotify",
         "musicbot",
         "javascript"
     ],
     "bugs": {
-        "url": "https://github.com/appujet/wavemusic/issues"
+        "url": "https://"
     },
-    "homepage": "https://github.com/appujet/wavemusic#readme",
+    "homepage": "https://",
     "devDependencies": {
         "@types/better-sqlite3": "^7.6.9",
         "@types/signale": "^1.4.7"
